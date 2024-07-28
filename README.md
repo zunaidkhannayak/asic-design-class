@@ -78,6 +78,8 @@ the instructions were given and thus we found out format of each instruction.
 | `LW`            | Load Word              | `r03`                    | `r01`                 | -                     | `2`                   | I-type                 |
 | `SLL`           | Shift Left Logical     | `r05`                    | `r01`                 | `r1`                  | -                     | R-type                 |
 now their hexadeximal representation 
+
+
 | **Assembly Instruction** | **Hexadecimal Representation** |
 |--------------------------|--------------------------------|
 | `ADD r10, r11, r12`     | `0x013A6020`                  |
