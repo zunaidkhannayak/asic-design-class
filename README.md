@@ -1,10 +1,11 @@
 # asic-design-class
-Lab 1_Task1: to make 
+## Lab 1
+### Task1: to make 
 C program and compile it using gcc compiler. Verify the output of the C program after execution.
 
 ![Screenshot 2024-07-17 032110](https://github.com/user-attachments/assets/250bf18c-2089-41dd-886c-055933482989)
 
-# Lab 1_task2:
+### task2:
 
 The same c program was compiled using this command with riscv compiler:
 
@@ -17,7 +18,7 @@ After that the following command was used to dump the assembly code in the termi
 
 ![Screenshot 2024-07-17 092335](https://github.com/user-attachments/assets/7a071373-a764-4698-857d-eab8acf6b801)
 
-# Lab 2
+## Lab 2
  To Execute  the object file created by the RISC-V GCC compiler by use of Spike-Simulator.
  
 for executing an object file created by the RISC-V GCC compiler we use the following command:
@@ -41,8 +42,8 @@ reg 0 a0,
 To execute the current instruction pointed by 'sp' and to appear on the next instruction, "Enter" button can be pressed to go to next instruction.
 ![Screenshot (12)](https://github.com/user-attachments/assets/dec0eb25-32ea-4519-966e-c23cbec376af)
 
-# Lab 3
-# Task 1 Identify various RISC V instruction type.
+## Lab 3
+### Task 1 Identify various RISC V instruction type.
 the instructions were given and thus we found out format of each instruction.
 
 | **Operation/Task**                |
@@ -101,5 +102,22 @@ now their hexadeximal representation
 | `LW r03, r01, 2`        | `0x00230023`                  |
 | `SLL r05, r01, r1`      | `0x00132100`                  |
 
+### Task 2 To execute in instructed assembly instructions using a given verilog code for a riscV processor.
+
+| **Operation**               | **Standard RISCV ISA** | **Hardcoded ISA** |
+|-----------------------------|-------------------------|--------------------|
+| `ADD r10, r11, r12`         | `32'h00c313b3`          | `32'h00c3b300`     |
+| `SUB r12, r10, r11`         | `32'h40a303b3`          | `32'h40a3b380`     |
+| `AND r11, r10, r12`         | `32'h00c3a533`          | `32'h00c3a400`     |
+| `OR r8, r11, r5`            | `32'h0052a033`          | `32'h0052a400`     |
+| `XOR r8, r10, r4`           | `32'h0042a033`          | `32'h0042a500`     |
+| `SLT r00, r1, r4`           | `32'h0002a073`          | `32'h0002a500`     |
+| `ADDI r02, r2, 5`           | `32'h0050a023`          | `32'h0050a200`     |
+| `SW r2, r0, 4`              | `32'h0040a023`          | `32'h0040a300`     |
+| `SRL r06, r01, r1`          | `32'h0001a073`          | `32'h0001a100`     |
+| `BNE r0, r0, 20`            | `32'h0010f063`          | `32'h0010f200`     |
+| `BEQ r0, r0, 15`            | `32'h00000e63`          | `32'h00000f00`     |
+| `LW r03, r01, 2`            | `32'h0020a083`          | `32'h0020a100`     |
+| `SLL r05, r01, r1`          | `32'h0001a033`          | `32'h0001a400`     |
 
 
