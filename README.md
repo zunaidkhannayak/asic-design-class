@@ -195,3 +195,31 @@ The waveform for the above command using the provided verilog code is given belo
 The waveform for the hardcoded command present in the code is given below:
 ![7t](https://github.com/user-attachments/assets/6a909995-6ab4-4b09-af97-4d40ea723ba6)
 
+
+`SW r2, r0, 4`
+The waveform for the above command using the provided verilog code is given below:
+![8](https://github.com/user-attachments/assets/439d0d49-f303-42b9-a417-ac72dc788150)
+
+The waveform for the hardcoded command present in the code is given below:
+![8t](https://github.com/user-attachments/assets/1a04cc75-fcc0-45f5-a4f2-f3a70bd02c88)
+
+`SRL r06, r01, r1`
+The waveform for the above command using the provided verilog code is given below:
+![9](https://github.com/user-attachments/assets/5d4472ae-ef4c-4ab5-93d9-a4bfbb63d422)
+
+The waveform for the hardcoded command present in the code is given below:
+![9t](https://github.com/user-attachments/assets/77232dbd-8902-4d93-a4dc-49439c2f037d)
+
+`BNE r0, r0, 20` 
+The waveform for the above command using the provided verilog code is given below:
+![10](https://github.com/user-attachments/assets/4577e6c5-4647-4fef-89ac-bce2846a4811)
+
+The waveform for the hardcoded command present in the code is given below:
+![10t](https://github.com/user-attachments/assets/7cc9514a-33ba-4f0a-a380-033e91e56ddc)
+
+`BEQ r0, r0, 15`  
+The waveform for the above command using the provided verilog code is given below:
+![11](https://github.com/user-attachments/assets/e3273da3-265b-4924-a377-45de83f07c2d)
+
+
+Similarly for other remaining instructions we can match our verilog instruction with hardcoded instructions waveform and we can say that it is not matching with the given instructions waveform.
