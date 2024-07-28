@@ -45,6 +45,21 @@ Lab 3
 Task 1 Identify various RISC V instruction type.
 the instructions were given and thus we found out format of each instruction.
 
+| **Operation/Task**                |
+|-----------------------------------|
+| `ADD r10, r11, r12`               |
+| `SUB r12, r10, r11`               |
+| `AND r11, r10, r12`               |
+| `OR r8, r11, r5`                  |
+| `XOR r8, r10, r4`                 |
+| `SLT r00, r1, r4`                 |
+| `ADDI r02, r2, 5`                 |
+| `SW r2, r0, 4`                    |
+| `SRL r06, r01, r1`                |
+| `BNE r0, r0, 20`                 |
+| `BEQ r0, r0, 15`                 |
+| `LW r03, r01, 2`                  |
+| `SLL r05, r01, r1`                |
 
 
 | **Instruction** | **Operation**         | **Destination Register** | **Source Register 1** | **Source Register 2** | **Immediate/Offset** | **Instruction Format** |
