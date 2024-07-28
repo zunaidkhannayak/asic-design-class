@@ -120,4 +120,10 @@ now their hexadeximal representation
 | `LW r03, r01, 2`            | `32'h0020a083`          | `32'h0020a100`     |
 | `SLL r05, r01, r1`          | `32'h0001a033`          | `32'h0001a400`     |
 
+on the terminal following command was used for execution
+
+iverilog -o Test_code Test_code.v Test_code_tb.b
+
+./Test_code
+
 
