@@ -77,5 +77,21 @@ the instructions were given and thus we found out format of each instruction.
 | `BEQ`           | Branch if Equal        | -                        | `r0`                  | `r0`                  | `15`                  | I-type                 |
 | `LW`            | Load Word              | `r03`                    | `r01`                 | -                     | `2`                   | I-type                 |
 | `SLL`           | Shift Left Logical     | `r05`                    | `r01`                 | `r1`                  | -                     | R-type                 |
+now their hexadeximal representation 
+| **Assembly Instruction** | **Hexadecimal Representation** |
+|--------------------------|--------------------------------|
+| `ADD r10, r11, r12`     | `0x013A6020`                  |
+| `SUB r12, r10, r11`     | `0x01FAA020`                  |
+| `AND r11, r10, r12`     | `0x013A6024`                  |
+| `OR r8, r11, r5`        | `0x01B84025`                  |
+| `XOR r8, r10, r4`       | `0x014A4026`                  |
+| `SLT r00, r1, r4`       | `0x001A402A`                  |
+| `ADDI r02, r2, 5`       | `0x00200320`                  |
+| `SW r2, r0, 4`          | `0x0020002B`                  |
+| `SRL r06, r01, r1`      | `0x00132102`                  |
+| `BNE r0, r0, 20`        | `0x0000A0F0`                  |
+| `BEQ r0, r0, 15`        | `0x0000A0E0`                  |
+| `LW r03, r01, 2`        | `0x00230023`                  |
+| `SLL r05, r01, r1`      | `0x00132100`                  |
 
 
