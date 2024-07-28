@@ -130,5 +130,68 @@ We can notice some difference between  the following two images when comparing a
 
 `ADD r10, r11, r12`
 The waveform for the above command using the provided verilog code is given below:
+![1](https://github.com/user-attachments/assets/f791f458-f2e8-488a-8263-169749510a28)
 
+
+The waveform for the hardcoded command present in the code is given below:
+![1t](https://github.com/user-attachments/assets/c112439d-c1de-4dd3-8d00-2f349a48f3ea)
+
+
+
+`SUB r12, r10, r11`
+The waveform for the above command using the provided verilog code is given below:
+![2](https://github.com/user-attachments/assets/4df0eff8-7d91-4e1c-ae01-77bc97b38b5b)
+
+The waveform for the hardcoded command present in the code is given below:
+![2t](https://github.com/user-attachments/assets/408486d6-0cc4-4978-b851-e762414fb3b6)
+
+
+`AND r11, r10, r12`
+
+The waveform for the above command using the provided verilog code is given below:
+
+
+![3](https://github.com/user-attachments/assets/0d6e05cd-d5ba-4d2e-aa34-7f0fecfc6e35)
+
+The waveform for the hardcoded command present in the code is given below:
+![3t](https://github.com/user-attachments/assets/f6114a2e-47ce-4c37-816a-b40c4176158a)
+
+
+`OR r8, r11, r5`
+The waveform for the above command using the provided verilog code is given below:
+![4](https://github.com/user-attachments/assets/5eb880b9-d7de-4cee-9b6b-ddd61fc17655)
+
+
+The waveform for the hardcoded command present in the code is given below:
+![4t](https://github.com/user-attachments/assets/ccf43786-3c9b-41b0-8a11-13d3556b7640)
+
+
+`XOR r8, r10, r4`  
+The waveform for the above command using the provided verilog code is given below:
+![5](https://github.com/user-attachments/assets/be49cbce-8961-4e02-b4cf-b786c2d5a961)
+
+
+
+The waveform for the hardcoded command present in the code is given below:
+
+![5t](https://github.com/user-attachments/assets/f8215d09-690a-4ef7-a48f-def1a7e84317)
+
+
+`SLT r00, r1, r4` 
+The waveform for the above command using the provided verilog code is given below:
+
+![6](https://github.com/user-attachments/assets/84949026-bdbb-4a62-812a-4345d496e357)
+
+
+The waveform for the hardcoded command present in the code is given below:
+
+![6t](https://github.com/user-attachments/assets/4b0bd2b3-3d41-436e-a3b0-f98e58440ba7)
+
+`ADDI r02, r2, 5` 
+The waveform for the above command using the provided verilog code is given below:
+![7](https://github.com/user-attachments/assets/79643fbf-8d04-42c1-9782-f988a6aa1280)
+
+
+The waveform for the hardcoded command present in the code is given below:
+![7t](https://github.com/user-attachments/assets/6a909995-6ab4-4b09-af97-4d40ea723ba6)
 
