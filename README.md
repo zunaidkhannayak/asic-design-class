@@ -17,7 +17,7 @@ After that the following command was used to dump the assembly code in the termi
 
 ![Screenshot 2024-07-17 092335](https://github.com/user-attachments/assets/7a071373-a764-4698-857d-eab8acf6b801)
 
-Task-3
+Lab 2
  To Execute  the object file created by the RISC-V GCC compiler by use of Spike-Simulator.
  
 for executing an object file created by the RISC-V GCC compiler we use the following command:
@@ -41,5 +41,26 @@ reg 0 a0,
 To execute the current instruction pointed by 'sp' and to appear on the next instruction, "Enter" button can be pressed to go to next instruction.
 ![Screenshot (12)](https://github.com/user-attachments/assets/dec0eb25-32ea-4519-966e-c23cbec376af)
 
+Lab 3
+Task 1 Identify various RISC V instruction type.
+the instructions were given and thus we found out format of each instruction.
+
+
+
+| **Instruction** | **Operation**         | **Destination Register** | **Source Register 1** | **Source Register 2** | **Immediate/Offset** | **Instruction Format** |
+|-----------------|------------------------|--------------------------|-----------------------|-----------------------|-----------------------|------------------------|
+| `ADD`           | Addition               | `r10`                    | `r11`                 | `r12`                 | -                     | R-type                 |
+| `SUB`           | Subtraction            | `r12`                    | `r10`                 | `r11`                 | -                     | R-type                 |
+| `AND`           | Bitwise AND            | `r11`                    | `r10`                 | `r12`                 | -                     | R-type                 |
+| `OR`            | Bitwise OR             | `r8`                     | `r11`                 | `r5`                  | -                     | R-type                 |
+| `XOR`           | Bitwise XOR            | `r8`                     | `r10`                 | `r4`                  | -                     | R-type                 |
+| `SLT`           | Set Less Than          | `r00`                    | `r1`                  | `r4`                  | -                     | R-type                 |
+| `ADDI`          | Add Immediate          | `r02`                    | `r2`                  | -                     | `5`                   | I-type                 |
+| `SW`            | Store Word             | -                        | `r2`                  | `r0`                  | `4`                   | I-type                 |
+| `SRL`           | Shift Right Logical    | `r06`                    | `r01`                 | `r1`                  | -                     | R-type                 |
+| `BNE`           | Branch if Not Equal    | -                        | `r0`                  | `r0`                  | `20`                  | I-type                 |
+| `BEQ`           | Branch if Equal        | -                        | `r0`                  | `r0`                  | `15`                  | I-type                 |
+| `LW`            | Load Word              | `r03`                    | `r01`                 | -                     | `2`                   | I-type                 |
+| `SLL`           | Shift Left Logical     | `r05`                    | `r01`                 | `r1`                  | -                     | R-type                 |
 
 
