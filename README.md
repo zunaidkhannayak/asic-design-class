@@ -4,7 +4,7 @@ C program and compile it using gcc compiler. Verify the output of the C program 
 
 ![Screenshot 2024-07-17 032110](https://github.com/user-attachments/assets/250bf18c-2089-41dd-886c-055933482989)
 
-Lab 1_task2:
+# Lab 1_task2:
 
 The same c program was compiled using this command with riscv compiler:
 
@@ -17,7 +17,7 @@ After that the following command was used to dump the assembly code in the termi
 
 ![Screenshot 2024-07-17 092335](https://github.com/user-attachments/assets/7a071373-a764-4698-857d-eab8acf6b801)
 
-Lab 2
+# Lab 2
  To Execute  the object file created by the RISC-V GCC compiler by use of Spike-Simulator.
  
 for executing an object file created by the RISC-V GCC compiler we use the following command:
@@ -41,8 +41,8 @@ reg 0 a0,
 To execute the current instruction pointed by 'sp' and to appear on the next instruction, "Enter" button can be pressed to go to next instruction.
 ![Screenshot (12)](https://github.com/user-attachments/assets/dec0eb25-32ea-4519-966e-c23cbec376af)
 
-Lab 3
-Task 1 Identify various RISC V instruction type.
+# Lab 3
+# Task 1 Identify various RISC V instruction type.
 the instructions were given and thus we found out format of each instruction.
 
 | **Operation/Task**                |
@@ -77,7 +77,12 @@ the instructions were given and thus we found out format of each instruction.
 | `BEQ`           | Branch if Equal        | -                        | `r0`                  | `r0`                  | `15`                  | I-type                 |
 | `LW`            | Load Word              | `r03`                    | `r01`                 | -                     | `2`                   | I-type                 |
 | `SLL`           | Shift Left Logical     | `r05`                    | `r01`                 | `r1`                  | -                     | R-type                 |
+
+
+
 now their hexadeximal representation 
+
+
 
 
 | **Assembly Instruction** | **Hexadecimal Representation** |
@@ -95,5 +100,6 @@ now their hexadeximal representation
 | `BEQ r0, r0, 15`        | `0x0000A0E0`                  |
 | `LW r03, r01, 2`        | `0x00230023`                  |
 | `SLL r05, r01, r1`      | `0x00132100`                  |
+
 
 
