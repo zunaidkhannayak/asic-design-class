@@ -126,4 +126,9 @@ on the terminal following command was used for execution
 
 `./Test_code`
 
+We can notice some difference between  the following two images when comparing as the verilog code availabe is not designed in agreement to the ISA which is used by me in this program.
+
+`ADD r10, r11, r12`
+The waveform for the above command using the provided verilog code is given below:
+
 
