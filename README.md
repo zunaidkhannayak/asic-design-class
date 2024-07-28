@@ -128,7 +128,9 @@ on the terminal following command was used for execution
 
 We can notice some difference between  the following two images when comparing as the verilog code availabe is not designed in agreement to the ISA which is used by me in this program.
 
+
 `ADD r10, r11, r12`
+
 The waveform for the above command using the provided verilog code is given below:
 ![1](https://github.com/user-attachments/assets/f791f458-f2e8-488a-8263-169749510a28)
 
@@ -139,6 +141,7 @@ The waveform for the hardcoded command present in the code is given below:
 
 
 `SUB r12, r10, r11`
+
 The waveform for the above command using the provided verilog code is given below:
 ![2](https://github.com/user-attachments/assets/4df0eff8-7d91-4e1c-ae01-77bc97b38b5b)
 
@@ -158,6 +161,7 @@ The waveform for the hardcoded command present in the code is given below:
 
 
 `OR r8, r11, r5`
+
 The waveform for the above command using the provided verilog code is given below:
 ![4](https://github.com/user-attachments/assets/5eb880b9-d7de-4cee-9b6b-ddd61fc17655)
 
@@ -167,6 +171,7 @@ The waveform for the hardcoded command present in the code is given below:
 
 
 `XOR r8, r10, r4`  
+
 The waveform for the above command using the provided verilog code is given below:
 ![5](https://github.com/user-attachments/assets/be49cbce-8961-4e02-b4cf-b786c2d5a961)
 
@@ -178,6 +183,7 @@ The waveform for the hardcoded command present in the code is given below:
 
 
 `SLT r00, r1, r4` 
+
 The waveform for the above command using the provided verilog code is given below:
 
 ![6](https://github.com/user-attachments/assets/84949026-bdbb-4a62-812a-4345d496e357)
@@ -188,6 +194,7 @@ The waveform for the hardcoded command present in the code is given below:
 ![6t](https://github.com/user-attachments/assets/4b0bd2b3-3d41-436e-a3b0-f98e58440ba7)
 
 `ADDI r02, r2, 5` 
+
 The waveform for the above command using the provided verilog code is given below:
 ![7](https://github.com/user-attachments/assets/79643fbf-8d04-42c1-9782-f988a6aa1280)
 
@@ -197,6 +204,7 @@ The waveform for the hardcoded command present in the code is given below:
 
 
 `SW r2, r0, 4`
+
 The waveform for the above command using the provided verilog code is given below:
 ![8](https://github.com/user-attachments/assets/439d0d49-f303-42b9-a417-ac72dc788150)
 
@@ -204,6 +212,7 @@ The waveform for the hardcoded command present in the code is given below:
 ![8t](https://github.com/user-attachments/assets/1a04cc75-fcc0-45f5-a4f2-f3a70bd02c88)
 
 `SRL r06, r01, r1`
+
 The waveform for the above command using the provided verilog code is given below:
 ![9](https://github.com/user-attachments/assets/5d4472ae-ef4c-4ab5-93d9-a4bfbb63d422)
 
@@ -211,6 +220,7 @@ The waveform for the hardcoded command present in the code is given below:
 ![9t](https://github.com/user-attachments/assets/77232dbd-8902-4d93-a4dc-49439c2f037d)
 
 `BNE r0, r0, 20` 
+
 The waveform for the above command using the provided verilog code is given below:
 ![10](https://github.com/user-attachments/assets/4577e6c5-4647-4fef-89ac-bce2846a4811)
 
@@ -218,6 +228,7 @@ The waveform for the hardcoded command present in the code is given below:
 ![10t](https://github.com/user-attachments/assets/7cc9514a-33ba-4f0a-a380-033e91e56ddc)
 
 `BEQ r0, r0, 15`  
+
 The waveform for the above command using the provided verilog code is given below:
 ![11](https://github.com/user-attachments/assets/e3273da3-265b-4924-a377-45de83f07c2d)
 
