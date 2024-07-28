@@ -122,8 +122,8 @@ now their hexadeximal representation
 
 on the terminal following command was used for execution
 
-iverilog -o Test_code Test_code.v Test_code_tb.b
+`iverilog -o Test_code Test_code.v Test_code_tb.b`
 
-./Test_code
+`./Test_code`
 
 
