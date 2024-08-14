@@ -1,4 +1,4 @@
-# asic-design-class
+# ASIC-design-class
 ## Lab 1
 ### Task1: 
 To make a C program and compile it using gcc compiler. Verify the output of the C program after execution.
@@ -255,6 +255,41 @@ const char *morse[] = {
     "---..", "----.",                                                   // 8-9
     "--..--", ".-.-.-", "..--.."                                        // ,  .  ?
 };
+
+So, basically it will take input  either in morse or in english then convert it into another accordingly.
+![s1](https://github.com/user-attachments/assets/4a8dc601-ce6f-4b94-82a8-06fafe1f90fa)
+![s2](https://github.com/user-attachments/assets/6a7a7f6f-424d-49af-bfe0-80a6d96718ef)
+![s3](https://github.com/user-attachments/assets/19ef857d-e8be-4e82-b08b-bae08ae021cf)
+
+### compilation in gcc
+'gcc morsecode.c'
+![Screenshot (56)](https://github.com/user-attachments/assets/c2479a9b-1aa2-4bb8-9fc7-509febdb91f9)
+we clearly see that when we write our input in english it converts it into its respective morse then showing vice versa.
+ ### compilation by using riscv gcc using -O1
+ Optimization Level 1: This flag enables a set of basic optimizations that are relatively fast to perform and do not significantly increase the compilation time.
+Effects:
+Reduces code size and improves execution speed.
+Eliminates some unnecessary code and does some basic inlining and loop optimizations.
+Balances between performance and compilation time, making it a good choice for development builds.
+'riscv64-unknown-elf-gcc -O1 -mabi=lp64 -march=rv64i -o morsecode.o morsecode.c'
+![Screenshot (59)](https://github.com/user-attachments/assets/d869c0c5-2118-4b16-af5a-cb985781bfd2)
+
+Compiles the morsecode.c source file: It generates an object file (morsecode.o) optimized at the -O1 level for the RISC-V 64-bit architecture.
+Target ABI and Architecture: The resulting object file is intended for a system using the lp64 ABI and the rv64i architecture.
+now to see the assembly code
+'riscv64-unknown-elf-objdump -d morsecode.o'
+![Screenshot (60)](https://github.com/user-attachments/assets/b73e074a-9ea8-4642-9a71-45bcf04be004)
+![Screenshot (61)](https://github.com/user-attachments/assets/20ac0fe7-0f53-44f6-942b-45936e6cb0c3)
+
+It is used to disassemble the object file morsecode.o for the RISC-V 64-bit architecture
+
+-d: This option tells objdump to disassemble the executable code in the object file. Disassembling means converting the machine code (binary instructions) back into human-readable assembly code.
+'riscv64-unknown-elf-objdump -d morsecode.o | less'
+![image](https://github.com/user-attachments/assets/ed632ee1-cb1b-475a-8121-8a67f5ba43de)
+![Screenshot (63)](https://github.com/user-attachments/assets/6b3e1653-729e-4345-a2c8-e1f38e416500)
+
+
+The command disassembles the morsecode.o file and sends the disassembled output to less, allowing you to view it in a controlled, scrollable manner.
 
 
 
