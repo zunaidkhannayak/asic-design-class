@@ -1,7 +1,7 @@
 # asic-design-class
 ## Lab 1
-### Task1: to make 
-C program and compile it using gcc compiler. Verify the output of the C program after execution.
+### Task1: 
+To make a C program and compile it using gcc compiler. Verify the output of the C program after execution.
 
 ![Screenshot 2024-07-17 032110](https://github.com/user-attachments/assets/250bf18c-2089-41dd-886c-055933482989)
 
@@ -234,3 +234,32 @@ The waveform for the above command using the provided verilog code is given belo
 
 
 Similarly for other remaining instructions we can match our verilog instruction with hardcoded instructions waveform and we can say that it is not matching with the given instructions waveform.
+
+## lab 4: project on Morse code encoder/decoder:
+### morse code :
+Morse code is a method of encoding text characters as sequences of dots (short signals) and dashes (long signals). Despite its origins in the 19th century, Morse code remains relevant in several fields today like Amateur Radio (Ham Radio),Maritime Communication,Military and Aviation,Education and Training,Assistive Technology etc.
+###my project
+Here in my program it asks user either input will be in morse code or in alphabets then it takes the input accordingly and according to predefined morse code of each letter from A to Z and digits 0 to 9 and three special characters used to facilitate more punctuations in user input(so user camn enter , . or ? sign it'll not show any error).
+### code explanation:
+Here in my code I am using '#include <ctype.h>' this is specially used to  include the C Standard Library header file that provides functions for character classification and conversion.
+in my code i have used The  'toupper()' function which converts a lowercase character to its uppercase equivalent.
+Since Morse code is case-insensitive and the alphabet[] array only contains uppercase letters, toupper() ensures that any lowercase input is converted to uppercase before processing.
+If you don't include #include <ctype.h>, the compiler will not recognize the toupper() function, resulting in an error.
+#### morse code mapping
+
+const char *morse[] = {
+    ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---",  // A-J
+    "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-",   // K-T
+    "..-", "...-", ".--", "-..-", "-.--", "--..",                         // U-Z
+    "-----", ".----", "..---", "...--", "....-", ".....", "-....", "--...", // 0-7
+    "---..", "----.",                                                   // 8-9
+    "--..--", ".-.-.-", "..--.."                                        // ,  .  ?
+};
+
+
+
+
+
+
+
+
