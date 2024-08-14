@@ -287,6 +287,8 @@ It is used to disassemble the object file morsecode.o for the RISC-V 64-bit arch
 'riscv64-unknown-elf-objdump -d morsecode.o | less'
 ![image](https://github.com/user-attachments/assets/ed632ee1-cb1b-475a-8121-8a67f5ba43de)
 ![Screenshot (63)](https://github.com/user-attachments/assets/6b3e1653-729e-4345-a2c8-e1f38e416500)
+#### to see output using spike O1
+![Screenshot (72)](https://github.com/user-attachments/assets/0f3d3590-7a4b-42bc-89e5-3e360cba04a6)
 
 
 The command disassembles the morsecode.o file and sends the disassembled output to less, allowing you to view it in a controlled, scrollable manner.
@@ -300,6 +302,7 @@ The command disassembles the morsecode.o file and sends the disassembled output 
 
 ![Screenshot (69)](https://github.com/user-attachments/assets/bc3a2675-0a57-4f3c-9be0-cdd295aa463c)
 ![Screenshot (70)](https://github.com/user-attachments/assets/4ba5f587-c3d4-4124-adac-4230da034358)
+#### to see output using spike Ofast
 
-
+![Screenshot (71)](https://github.com/user-attachments/assets/1ad78b51-72da-4b08-b72d-802b2b4685d2)
 
