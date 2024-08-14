@@ -291,10 +291,15 @@ It is used to disassemble the object file morsecode.o for the RISC-V 64-bit arch
 
 The command disassembles the morsecode.o file and sends the disassembled output to less, allowing you to view it in a controlled, scrollable manner.
 
+### compilation by using riscv gcc using -Ofast
+'riscv64-unknown-elf-gcc -Ofast -mabi=lp64 -march=rv64i -o morsecode.o morsecode.c'
 
 
 
+![Screenshot (68)](https://github.com/user-attachments/assets/3674f671-ccb6-442b-bc99-90219d7f52ee)
 
+![Screenshot (69)](https://github.com/user-attachments/assets/bc3a2675-0a57-4f3c-9be0-cdd295aa463c)
+![Screenshot (70)](https://github.com/user-attachments/assets/4ba5f587-c3d4-4124-adac-4230da034358)
 
 
 
