@@ -262,7 +262,9 @@ Similarly for other remaining instructions we can match our verilog instruction 
 Morse code is a method of encoding text characters as sequences of dots (short signals) and dashes (long signals). Despite its origins in the 19th century, Morse code remains relevant in several fields today like Amateur Radio (Ham Radio),Maritime Communication,Military and Aviation,Education and Training,Assistive Technology etc.
 ###my project
 Here in my program it asks user either input will be in morse code or in alphabets then it takes the input accordingly and according to predefined morse code of each letter from A to Z and digits 0 to 9 and three special characters used to facilitate more punctuations in user input(so user camn enter , . or ? sign it'll not show any error).
-###code
+
+ ### code
+ 
 ```c
 #include <stdio.h>
 #include <string.h>
