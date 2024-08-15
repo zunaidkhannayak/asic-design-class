@@ -240,12 +240,105 @@ Similarly for other remaining instructions we can match our verilog instruction 
 Morse code is a method of encoding text characters as sequences of dots (short signals) and dashes (long signals). Despite its origins in the 19th century, Morse code remains relevant in several fields today like Amateur Radio (Ham Radio),Maritime Communication,Military and Aviation,Education and Training,Assistive Technology etc.
 ###my project
 Here in my program it asks user either input will be in morse code or in alphabets then it takes the input accordingly and according to predefined morse code of each letter from A to Z and digits 0 to 9 and three special characters used to facilitate more punctuations in user input(so user camn enter , . or ? sign it'll not show any error).
+###code
+```c
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>  // For toupper() so that no error occur if we input in small char
+
+// Morse code mappings
+const char *morse[] = {
+    ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---",  // A-J
+    "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-",   // K-T
+    "..-", "...-", ".--", "-..-", "-.--", "--..",                         // U-Z
+    "-----", ".----", "..---", "...--", "....-", ".....", "-....", "--...", // 0-7
+    "---..", "----.",                                                   // 8-9
+    "--..--", ".-.-.-", "..--.."                                        // ,  .  ?
+};
+
+const char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.?";
+
+//this is my  Function to encode text to Morse code
+void encode_to_morse(const char *text) {
+    while (*text) {
+        if (*text == ' ') {
+            printf("   ");  // 3 spaces between words
+        } else {
+            char *p = strchr(alphabet, toupper(*text));
+            if (p) {
+                printf("%s ", morse[p - alphabet]);
+            }
+        }
+        text++;
+    }
+    printf("\n");
+}
+
+// this is my Function to decode Morse code to text
+void decode_from_morse(const char *morse_code) {
+    char buffer[10];
+    while (*morse_code) {
+        int i = 0;
+        while (*morse_code != ' ' && *morse_code != '\0') {
+            buffer[i++] = *morse_code++;
+        }
+        buffer[i] = '\0';
+
+        for (int j = 0; j < sizeof(alphabet) - 1; j++) {
+            if (strcmp(buffer, morse[j]) == 0) {
+                printf("%c", alphabet[j]);
+                break;
+            }
+        }
+
+        if (*morse_code == ' ') {
+            morse_code++;  // Skip space between Morse characters
+            if (*morse_code == ' ') {
+                printf(" ");  // Additional space indicates a new word
+                morse_code++;  // Skip the additional space
+            }
+        }
+    }
+    printf("\n");
+}
+
+int main() {
+    char text[100];
+    int choice;
+
+    printf("1. Encode text to Morse code\n");
+    printf("2. Decode Morse code to text\n");
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
+    getchar();  // Consume the newline character
+
+    if (choice == 1) {
+        printf("Enter text to encode: ");
+        fgets(text, sizeof(text), stdin);
+        text[strcspn(text, "\n")] = '\0';  // Remove the newline character
+        printf("Morse code: ");
+        encode_to_morse(text);
+    } else if (choice == 2) {
+        printf("Enter Morse code to decode (separate letters with spaces and words with triple spaces): ");
+        fgets(text, sizeof(text), stdin);
+        text[strcspn(text, "\n")] = '\0';
+        printf("Decoded text: ");
+        decode_from_morse(text);
+    } else {
+        printf("Invalid choice.\n");
+    }
+
+    return 0;
+}
+
+```
 ### code explanation:
 Here in my code I am using '#include <ctype.h>' this is specially used to  include the C Standard Library header file that provides functions for character classification and conversion.
 in my code i have used The  'toupper()' function which converts a lowercase character to its uppercase equivalent.
 Since Morse code is case-insensitive and the alphabet[] array only contains uppercase letters, toupper() ensures that any lowercase input is converted to uppercase before processing.
 If you don't include #include <ctype.h>, the compiler will not recognize the toupper() function, resulting in an error.
 #### morse code mapping
+```c
 
 const char *morse[] = {
     ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---",  // A-J
@@ -256,10 +349,10 @@ const char *morse[] = {
     "--..--", ".-.-.-", "..--.."                                        // ,  .  ?
 };
 
+```
+
 So, basically it will take input  either in morse or in english then convert it into another accordingly.
-![s1](https://github.com/user-attachments/assets/4a8dc601-ce6f-4b94-82a8-06fafe1f90fa)
-![s2](https://github.com/user-attachments/assets/6a7a7f6f-424d-49af-bfe0-80a6d96718ef)
-![s3](https://github.com/user-attachments/assets/19ef857d-e8be-4e82-b08b-bae08ae021cf)
+
 
 ### compilation in gcc
 'gcc morsecode.c'
