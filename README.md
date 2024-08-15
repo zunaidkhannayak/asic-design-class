@@ -1,5 +1,8 @@
 # ASIC-design-class
-## Lab 1
+<details>
+ 
+<summary> <h2>Lab1</h2> </summary>
+
 ### Task1: 
 To make a C program and compile it using gcc compiler. Verify the output of the C program after execution.
 
@@ -17,8 +20,14 @@ After that the following command was used to dump the assembly code in the termi
 
 
 ![Screenshot 2024-07-17 092335](https://github.com/user-attachments/assets/7a071373-a764-4698-857d-eab8acf6b801)
+</details>
 
-## Lab 2
+
+<details>
+ 
+<summary> <h2>Lab2</h2> </summary>
+ 
+ ## Lab 2
  To Execute  the object file created by the RISC-V GCC compiler by use of Spike-Simulator.
  
 for executing an object file created by the RISC-V GCC compiler we use the following command:
@@ -41,7 +50,13 @@ for checking value of any register we use following command:
 reg 0 a0,
 To execute the current instruction pointed by 'sp' and to appear on the next instruction, "Enter" button can be pressed to go to next instruction.
 ![Screenshot (12)](https://github.com/user-attachments/assets/dec0eb25-32ea-4519-966e-c23cbec376af)
+</details>
 
+
+ 
+<details>
+ 
+<summary> <h2>Lab 3</h2> </summary>
 ## Lab 3
 ### Task 1 Identify various RISC V instruction type.
 the instructions were given and thus we found out format of each instruction.
@@ -234,6 +249,13 @@ The waveform for the above command using the provided verilog code is given belo
 
 
 Similarly for other remaining instructions we can match our verilog instruction with hardcoded instructions waveform and we can say that it is not matching with the given instructions waveform.
+</details>
+
+
+ 
+<details>
+ 
+<summary> <h2>Lab 4</h2> </summary>
 
 ## lab 4: project on Morse code encoder/decoder:
 ### morse code :
@@ -354,6 +376,7 @@ const char *morse[] = {
 So, basically it will take input  either in morse or in english then convert it into another accordingly.
 
 
+
 ### compilation in gcc
 'gcc morsecode.c'
 ![Screenshot (56)](https://github.com/user-attachments/assets/c2479a9b-1aa2-4bb8-9fc7-509febdb91f9)
@@ -398,4 +421,7 @@ The command disassembles the morsecode.o file and sends the disassembled output 
 #### to see output using spike Ofast
 
 ![Screenshot (71)](https://github.com/user-attachments/assets/1ad78b51-72da-4b08-b72d-802b2b4685d2)
+</details>
+
+
 
