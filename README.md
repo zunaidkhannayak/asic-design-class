@@ -426,4 +426,256 @@ The command disassembles the morsecode.o file and sends the disassembled output 
 </details>
 
 
+<details>
+ 
+<summary> <h2>Lab5</h2> </summary>
 
+
+## lab5: make a Risc-V processor core using TL-Verilog 
+
+TL-Verilog (Transaction-Level Verilog) is an extension of traditional Verilog that focuses on improving the abstraction and productivity in hardware design, especially for complex digital systems. It was developed to address some of the limitations of traditional RTL (Register-Transfer Level) design by introducing higher-level constructs and simplifying the design process.
+
+### Key Features of TL-Verilog:
+1. Pipelines: TL-Verilog introduces pipeline constructs that allow designers to easily manage and visualize pipelines in their designs. Pipelining is a common technique in digital design, but managing it in traditional RTL can be cumbersome. TL-Verilog makes it more straightforward.
+
+2. Implicit Registers: Unlike traditional Verilog, where you explicitly define registers, TL-Verilog allows you to work with implicit registers, reducing the amount of code you need to write and making your designs cleaner.
+
+3. Transactions: TL-Verilog emphasizes transaction-level abstractions, which means that it focuses more on data movement (transactions) rather than the low-level signal toggling. This abstraction allows for higher productivity and easier debugging.
+
+4. Cleaner Syntax: TL-Verilog simplifies the syntax for many common operations, making the code easier to read and write. This is particularly helpful for reducing errors and speeding up the development process.
+
+5. Scalability: TL-Verilog is designed to be scalable, meaning that it can handle large and complex designs more efficiently than traditional Verilog.
+
+6. Integration with Traditional Verilog: TL-Verilog is built on top of traditional Verilog, so it can be integrated into existing Verilog design flows. Designers can start using TL-Verilog gradually without completely overhauling their design process.
+
+### Use Cases:
+Processor Design: TL-Verilog is particularly useful in designing complex processors, where pipelining and transaction-level abstraction can significantly reduce development time.
+Digital Signal Processing (DSP): It can also be used in DSP applications where performance and efficiency are crucial.
+System-on-Chip (SoC) Design: TL-Verilog's ability to handle complex and large-scale designs makes it suitable for SoC design.
+
+boolean operators
+
+![Screenshot (90)](https://github.com/user-attachments/assets/554ab17f-b215-4b6d-bcb5-66372222f0c6)
+
+
+generated diagram:
+
+![Screenshot (96)](https://github.com/user-attachments/assets/d03bc04f-004a-4b6e-abcf-821111fc86f1)
+
+simulation passed:
+![Screenshot (101)](https://github.com/user-attachments/assets/87d15680-ba53-4b08-b25e-634818988096)
+
+viz:
+![Screenshot (102)](https://github.com/user-attachments/assets/63c3bad8-66e5-484d-8baa-1eed117a70ed)
+
+The signals including the "named clock : $clk_zunaid "
+the waveform generated:
+![Screenshot (92)](https://github.com/user-attachments/assets/936a4dbf-af49-4025-859e-7b0f4167d651)
+
+### The final code:
+```c
+// ------------- Sum from 1 to 9 ------------
+// This program sums the numbers 1 through 9 
+// for the MYTH Workshop to validate RV32I.
+// The steps involve adding 1, 2, 3,...,9.
+//
+// Registers:
+//  x10 (a0): Input: 0, Output: Sum result
+//  x12 (a2): Holds value 10
+//  x13 (a3): Counter from 1 to 10
+//  x14 (a4): Accumulated Sum
+//
+
+// Set x10 (a0) to 0.
+m4_asm(ADD, x10, x0, x0)             
+
+// Set x14 (a4) to 0 to start summation.
+m4_asm(ADD, x14, x10, x0)            
+
+// Initialize x12 (a2) with the value 10.
+m4_asm(ADDI, x12, x10, 1010)        
+
+// Set x13 (a3) to 0 as the starting value.
+m4_asm(ADD, x13, x10, x0)           
+
+// Loop: Add x13 (a3) to x14 (a4).
+m4_asm(ADD, x14, x13, x14)           
+
+// Increment x13 (a3) by 1 for the next iteration.
+m4_asm(ADDI, x13, x13, 1)            
+
+// Continue looping until x13 (a3) reaches x12 (a2).
+m4_asm(BLT, x13, x12, 1111111111000) 
+
+// Store the result in x10 (a0).
+m4_asm(ADD, x10, x14, x0)            
+
+// Validate Load and Store instructions.
+m4_asm(SW, x0, x10, 100)             
+m4_asm(LW, x15, x0, 100)             
+
+// Optional infinite loop (uncomment to use).
+// m4_asm(JAL, x7, 00000000000000000000) 
+
+m4_define_hier(['M4_IMEM'], M4_NUM_INSTRS)
+
+// CPU Implementation
+|cpu
+   @0
+      $reset = *reset;
+      $clk_zunaid = *clk;
+
+   // Program Counter Logic
+   @0
+      $pc[31:0] = >>1$reset ? 0 
+                 : >>3$branch_taken ? >>3$branch_target
+                 : >>3$valid_mem_load ? >>3$next_pc
+                 : >>3$jump_valid && >>3$is_jal ? >>3$branch_target
+                 : >>3$jump_valid && >>3$is_jalr ? >>3$jalr_target
+                 : >>1$next_pc;
+      
+      $start_signal = !$reset && >>1$reset;
+
+   // Fetch and Decode Logic
+   @1
+      $next_pc[31:0] = $pc + 32'd4;
+      $imem_rd_addr[M4_IMEM_INDEX_CNT-1:0] = $pc[M4_IMEM_INDEX_CNT+1:2];
+      $imem_rd_en = !$reset;
+      $instr_word[31:0] = $imem_rd_data[31:0];
+
+      // Decode instruction types
+      $i_type = $instr_word[6:2] ==? 5'b0000x || $instr_word[6:2] ==? 5'b001x0 || $instr_word[6:2] ==? 5'b11100;
+      $r_type = $instr_word[6:2] ==? 5'b01011 || $instr_word[6:2] ==? 5'b01100 || $instr_word[6:2] ==? 5'b01110 || $instr_word[6:2] ==? 5'b10100;
+      $b_type = $instr_word[6:2] ==? 5'b11000;
+      $s_type = $instr_word[6:2] ==? 5'b0100x;
+      $j_type = $instr_word[6:2] ==? 5'b11011;
+      $u_type = $instr_word[6:2] ==? 5'b0x101;
+
+      // Immediate value decoding
+      $imm_value[31:0] = $i_type ? {{21{$instr_word[31]}}, $instr_word[30:20]} :
+                         $s_type ? {{21{$instr_word[31]}}, $instr_word[30:25], $instr_word[11:7]} :
+                         $b_type ? {{20{$instr_word[31]}}, $instr_word[7], $instr_word[30:25], $instr_word[11:8], 1'b0} :
+                         $u_type ? {$instr_word[31:12], 12'b0} :
+                         $j_type ? {{12{$instr_word[31]}}, $instr_word[19:12], $instr_word[20], $instr_word[30:21], 1'b0} :
+                         32'b0;
+
+      // Decode instruction components
+      $opcode_val[6:0] = $instr_word[6:0];
+      $rd_valid = $r_type || $j_type || $i_type || $u_type;
+      $rs2_valid = $r_type || $s_type || $b_type;
+      $rs1_valid = $r_type || $i_type || $b_type || $s_type;
+      $funct3_valid = $r_type || $i_type || $b_type || $s_type;
+      $funct7_valid = $r_type;
+
+      // Assign register fields
+      ?$rd_valid $rd[4:0] = $instr_word[11:7];
+      ?$rs2_valid $rs2[4:0] = $instr_word[24:20];
+      ?$rs1_valid $rs1[4:0] = $instr_word[19:15];
+      ?$funct3_valid $funct3[2:0] = $instr_word[14:12];
+      ?$funct7_valid $funct7[6:0] = $instr_word[31:25];
+
+      // Instruction Decoding
+      $instr_dec[10:0] = {$funct7[5], $funct3, $opcode_val};
+      $is_beq = $instr_dec ==? 11'bx_000_1100011;
+      $is_bne = $instr_dec ==? 11'bx_001_1100011;
+      $is_blt = $instr_dec ==? 11'bx_100_1100011;
+      $is_bge = $instr_dec ==? 11'bx_101_1100011;
+      $is_bltu = $instr_dec ==? 11'bx_110_1100011;
+      $is_bgeu = $instr_dec ==? 11'bx_111_1100011;
+
+      $is_addi = $instr_dec ==? 11'bx_000_0010011;
+      $is_add  = $instr_dec ==? 11'b0_000_0110011;
+      $is_sub  = $instr_dec ==? 11'b1_000_0110011;
+
+      $is_sltiu = $instr_dec ==? 11'bx_011_0010011;
+      $is_xori = $instr_dec ==? 11'bx_100_0010011;
+      $is_ori = $instr_dec ==? 11'bx_110_0010011;
+      $is_andi = $instr_dec ==? 11'bx_111_0010011;
+      $is_slli = $instr_dec ==? 11'b0_001_0010011;
+      $is_srli = $instr_dec ==? 11'b0_101_0010011;
+      $is_sral = $instr_dec ==? 11'b1_101_0010011;
+      $is_sll = $instr_dec ==? 11'b0_001_0110011;
+      $is_slt = $instr_dec ==? 11'b0_010_0110011;
+      $is_sltu = $instr_dec ==? 11'b0_011_0110011;
+      $is_xor = $instr_dec ==? 11'b0_100_0110011;
+      $is_srl = $instr_dec ==? 11'b0_101_0110011;
+      $is_sra = $instr_dec ==? 11'b1_101_0110011;
+      $is_or = $instr_dec ==? 11'b0_110_0110011;
+      $is_and = $instr_dec ==? 11'b0_111_0110011;
+
+      $is_lui = $instr_dec ==? 11'bx_xxx_0110111;
+      $is_auipc = $instr_dec ==? 11'bx_xxx_0010111;
+      $is_jal = $instr_dec ==? 11'bx_xxx_1101111;
+      $is_jalr = $instr_dec ==? 11'bx_000_1100111;
+      $is_sb = $instr_dec ==? 11'bx_000_0100011;
+      $is_sh = $instr_dec ==? 11'bx_001_0100011;
+      $is_sw = $instr_dec ==? 11'bx_010_0100011;
+      $is_lb = $instr_dec ==? 11'bx_000_0000011;
+      $is_lh = $instr_dec ==? 11'bx_001_0000011;
+      $is_lw = $instr_dec ==? 11'bx_010_0000011;
+      $is_lbu = $instr_dec ==? 11'bx_100_0000011;
+      $is_lhu = $instr_dec ==? 11'bx_101_0000011;
+
+      $is_fence = $instr_dec ==? 11'bx_xxx_0001111;
+      $is_ecall = $instr_dec ==? 11'bx_000_1110011;
+      $is_ebreak = $instr_dec ==? 11'bx_001_1110011;
+      $is_mret = $instr_dec ==? 11'bx_000_1110011;
+      $is_csrrw = $instr_dec ==? 11'bx_001_1110011;
+      $is_csrrs = $instr_dec ==? 11'bx_010_1110011;
+      $is_csrrc = $instr_dec ==? 11'bx_011_1110011;
+      $is_csrrwi = $instr_dec ==? 11'bx_101_1110011;
+      $is_csrrsi = $instr_dec ==? 11'bx_110_1110011;
+      $is_csrrci = $instr_dec ==? 11'bx_111_1110011;
+
+      $branch_taken = $is_beq && $rs1_value ==? $rs2_value || $is_bne && $rs1_value !=? $rs2_value || $is_blt && $rs1_value <_signed $rs2_value || $is_bge && $rs1_value >=_signed $rs2_value || $is_bltu && $rs1_value < $rs2_value || $is_bgeu && $rs1_value >= $rs2_value;
+
+      $branch_target = $pc + $imm_value;
+
+   // Execute Logic
+   @3
+      $valid_mem_load = $is_lb || $is_lh || $is_lw || $is_lbu || $is_lhu;
+      $valid_mem_store = $is_sb || $is_sh || $is_sw;
+      $jump_valid = $is_jal || $is_jalr;
+      $mem_addr = $rs1_value + $imm_value;
+      $branch_valid = $branch_taken || $is_jal || $is_jalr;
+
+      // ALU Operations
+      $alu_result[31:0] = $is_lui || $is_auipc ? $imm_value :
+                          $is_jal || $is_jalr ? $next_pc :
+                          $is_addi || $is_lb || $is_lh || $is_lw || $is_lbu || $is_lhu || $is_sb || $is_sh || $is_sw ? $rs1_value + $imm_value :
+                          $is_sltiu ? $rs1_value < $imm_value :
+                          $is_xori ? $rs1_value ^ $imm_value :
+                          $is_ori ? $rs1_value | $imm_value :
+                          $is_andi ? $rs1_value & $imm_value :
+                          $is_slli ? $rs1_value << $imm_value[4:0] :
+                          $is_srli ? $rs1_value >> $imm_value[4:0] :
+                          $is_sral ? $rs1_value >>> $imm_value[4:0] :
+                          $is_add ? $rs1_value + $rs2_value :
+                          $is_sub ? $rs1_value - $rs2_value :
+                          $is_sll ? $rs1_value << $rs2_value[4:0] :
+                          $is_slt ? $rs1_value <_signed $rs2_value :
+                          $is_sltu ? $rs1_value < $rs2_value :
+                          $is_xor ? $rs1_value ^ $rs2_value :
+                          $is_srl ? $rs1_value >> $rs2_value[4:0] :
+                          $is_sra ? $rs1_value >>> $rs2_value[4:0] :
+                          $is_or ? $rs1_value | $rs2_value :
+                          $is_and ? $rs1_value & $rs2_value :
+                          32'b0;
+
+      // Memory Operations
+      $mem_wr_data[7:0] = $is_sb ? $rs2_value[7:0] : $is_sh ? $rs2_value[15:0] : $is_sw ? $rs2_value[31:0] : 8'b0;
+      $mem_rd_en = $valid_mem_load;
+      $mem_wr_en = $valid_mem_store;
+      $branch_taken = $branch_valid;
+      $branch_target = $branch_valid ? $pc + $imm_value : 32'b0;
+
+   // Writeback Logic
+   @4
+      // Register Writeback
+      $rd_wr_en = $rd_valid;
+      $rd_wr_data[31:0] = $valid_mem_load ? $mem_rd_data[31:0] : $alu_result[31:0];
+      $rd_wr_addr[4:0] = $rd[4:0];
+      ?$rd_valid $reg_file[$rd[4:0]] <= $rd_wr_data[31:0];
+
+
+```
