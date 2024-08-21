@@ -434,6 +434,10 @@ The command disassembles the morsecode.o file and sends the disassembled output 
 ## lab5: make a Risc-V processor core using TL-Verilog 
 
 TL-Verilog (Transaction-Level Verilog) is an extension of traditional Verilog that focuses on improving the abstraction and productivity in hardware design, especially for complex digital systems. It was developed to address some of the limitations of traditional RTL (Register-Transfer Level) design by introducing higher-level constructs and simplifying the design process.
+### Risc-v architecture
+
+![Screenshot (104)](https://github.com/user-attachments/assets/2f5ce72f-c846-4505-bfd4-904f5efa94e4)
+
 
 ### Key Features of TL-Verilog:
 1. Pipelines: TL-Verilog introduces pipeline constructs that allow designers to easily manage and visualize pipelines in their designs. Pipelining is a common technique in digital design, but managing it in traditional RTL can be cumbersome. TL-Verilog makes it more straightforward.
@@ -789,3 +793,6 @@ the waveform generated:
 
 
 ```
+### The waveform for the /xreg[14] where the sum of this program is store:
+![Screenshot (103)](https://github.com/user-attachments/assets/4809a79c-eb21-46f4-b02f-596242c3cdba)
+
