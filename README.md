@@ -529,7 +529,7 @@ the waveform generated:
 
 
 
-      // YOUR CODE HERE
+     
       @0
          $pc[31:0] = >>1$reset ? 0 
                     : >>3$valid_taken_br ? >>3$br_target_pc
@@ -539,12 +539,13 @@ the waveform generated:
                     : >>1$pc_inc;
          
          $start = !$reset && >>1$reset;
-     
+     //Program Counter (PC): Determines the next instruction to fetch based on the current state and instructions.
+
          
       @1
          $pc_inc[31:0] = $pc + 32'd4;
          //Fetch logic
-         
+         //Performs arithmetic and logical operations based on the instruction type (e.g., addition, subtraction).
          $imem_rd_addr[M4_IMEM_INDEX_CNT -1 : 0] = $pc[M4_IMEM_INDEX_CNT +1 : 2];
          $imem_rd_en = !$reset;
          $instr[31:0] = $imem_rd_data[31:0];
@@ -553,6 +554,7 @@ the waveform generated:
          $is_i_instr = $instr[6:2] ==? 5'b0000x ||
                        $instr[6:2] ==? 5'b001x0 ||
                        $instr[6:2] ==? 5'b11100 ;
+//Identifies the type of instruction (e.g., I-type, R-type) and extracts immediate values, register addresses, and function codes.
          $is_r_instr = $instr[6:2] ==? 5'b01011 ||
                        $instr[6:2] ==? 5'b01100 ||
                        $instr[6:2] ==? 5'b01110 ||
@@ -770,6 +772,7 @@ the waveform generated:
          
       @4
          //Data memory interface
+//Manages data memory read and write operations for load and store instructions.
          $dmem_rd_en = $is_load;
          $dmem_wr_en = $is_s_instr && $valid;
          
@@ -781,13 +784,10 @@ the waveform generated:
         
          
          *passed = |cpu/xreg[15]>>5$value == 45;
-        
-      // Note: Because of the magic we are using for visualisation, if visualisation is enabled below,
-      //       be sure to avoid having unassigned signals (which you might be using for random inputs)
-      //       other than those specifically expected in the labs. You'll get strange errors for these.
-
+     
+Verifies if the result of the computation matches the expected outcome (sum of numbers from 1 to 9).
    
-   // Assert these to end simulation (before Makerchip cycle limit).
+  
    
    *failed = 1'b0;
    
@@ -801,10 +801,11 @@ the waveform generated:
       m4+rf(@2, @3)  // Args: (read stage, write stage) - if equal, no register bypass is required
       m4+dmem(@4)    // Args: (read/write stage)
 
-   m4+cpu_viz(@4)    // For visualisation, argument should be at least equal to the last stage of CPU logic. @4 would work for all labs.
+   m4+cpu_viz(@4)   
 \SV
    endmodule
 ```
 ### The waveform for the /xreg[14] where the sum of this program is store:
 ![Screenshot (103)](https://github.com/user-attachments/assets/4809a79c-eb21-46f4-b02f-596242c3cdba)
-
+### summary:
+This code sets up a simulation for a RISC-V processor with a specific program that computes the sum of integers from 1 to 9. The assembly code initializes the registers, performs a looped addition, and stores the final result. The simulation logic models how the processor would fetch, decode, and execute instructions while handling memory operations and validating the result.
