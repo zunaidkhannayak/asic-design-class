@@ -474,208 +474,318 @@ the waveform generated:
 
 ### The final code:
 ```c
+\m4_TLV_version 1d: tl-x.org
+\SV
+ m4_include_lib(['https://raw.githubusercontent.com/BalaDhinesh/RISC-V_MYTH_Workshop/master/tlv_lib/risc-v_shell_lib.tlv'])
+
+\SV m4_makerchip_module
+\TLV
 // ------------- Sum from 1 to 9 ------------
 // This program sums the numbers 1 through 9 
 // for the MYTH Workshop to validate RV32I.
 // The steps involve adding 1, 2, 3,...,9.
-//
-// Registers:
-//  x10 (a0): Input: 0, Output: Sum result
-//  x12 (a2): Holds value 10
-//  x13 (a3): Counter from 1 to 10
-//  x14 (a4): Accumulated Sum
-//
+   // Registers:
+   //  r10 (a0): In: 0, Out: final sum
+   //  r12 (a2): 10
+   //  r13 (a3): 1..10
+   //  r14 (a4): Sum
+   // 
+   // External to function:
+   m4_asm(ADD, r10, r0, r0)             // Initialize r10 (a0) to 0.
+   // Function:
+   m4_asm(ADD, r14, r10, r0)            // Initialize sum register a4 with 0x0
+   m4_asm(ADDI, r12, r10, 1010)         // Store count of 10 in register a2.
+   m4_asm(ADD, r13, r10, r0)            // Initialize intermediate sum register a3 with 0
+   // Loop:
+   m4_asm(ADD, r14, r13, r14)           // Incremental addition
+   m4_asm(ADDI, r13, r13, 1)            // Increment intermediate register by 1
+   m4_asm(BLT, r13, r12, 1111111111000) // If a3 is less than a2, branch to label named <loop>
+   m4_asm(ADD, r10, r14, r0)            // Store final result to register a0 so that it can be read by main program
+   
+   m4_asm(SW, r0, r10, 100)             //Command to check for Load instruction
+   m4_asm(LW, r15, r0, 100)             // Command to check for the Store Instruction
+   
+   
+   // Optional:
+   // m4_asm(JAL, r7, 00000000000000000000) // Done. Jump to itself (infinite loop). (Up to 20-bit signed immediate plus implicit 0 bit (unlike JALR) provides byte address; last immediate bit should also be 0)
+   m4_define_hier(['M4_IMEM'], M4_NUM_INSTRS)
 
-// Set x10 (a0) to 0.
-m4_asm(ADD, x10, x0, x0)             
+   |cpu
+      @0
+         $reset = *reset;
+         $clk_zunaid = *clk;
 
-// Set x14 (a4) to 0 to start summation.
-m4_asm(ADD, x14, x10, x0)            
+      @0
+         $pc[31:0] = >>1$reset ? 0 
+                    : >>3$valid_taken_br ? >>3$br_target_pc
+                    : >>3$valid_load ? >>3$pc_inc
+                    : >>3$valid_jump && >>3$is_jal ? >>3$br_target_pc
+                    : >>3$valid_jump && >>3$is_jalr ? >>3$jalr_tgt_pc
+                    : >>1$pc_inc;
+         
+         $start = !$reset && >>1$reset;
+     
+         
+      @1
+         $pc_inc[31:0] = $pc + 32'd4;
+         
+         $imem_rd_addr[M4_IMEM_INDEX_CNT -1 : 0] = $pc[M4_IMEM_INDEX_CNT +1 : 2];
+         $imem_rd_en = !$reset;
+         $instr[31:0] = $imem_rd_data[31:0];
+         
+  
+         $is_i_instr = $instr[6:2] ==? 5'b0000x ||
+                       $instr[6:2] ==? 5'b001x0 ||
+                       $instr[6:2] ==? 5'b11100 ;
+         $is_r_instr = $instr[6:2] ==? 5'b01011 ||
+                       $instr[6:2] ==? 5'b01100 ||
+                       $instr[6:2] ==? 5'b01110 ||
+                       $instr[6:2] ==? 5'b10100 ;
+                       
+         $is_b_instr = $instr[6:2] ==? 5'b11000;
+         
+         $is_s_instr = $instr[6:2] ==? 5'b0100x;
+         
+         $is_j_instr = $instr[6:2] ==? 5'b11011;
+         
+         $is_u_instr = $instr[6:2] ==? 5'b0x101;
+         
+        
+         
+         $imm[31:0] = $is_i_instr ? { {21{$instr[31]}}, $instr[30:20]}:
+                      $is_s_instr ? { {21{$instr[31]}}, $instr[30:25], $instr[11:7]} :
+                      $is_b_instr ? { {20{$instr[31]}}, $instr[7], $instr[30:25], $instr[11:8], 1'b0} :
+                      $is_u_instr ? {$instr[31:12], 12'b0} :
+                      $is_j_instr ? { {12{$instr[31]}}, $instr[19:12], $instr[20], $instr[30:21], 1'b0} :
+                      32'b0;         
+                
+        
+         $opcode[6:0] = $instr[6:0] ;
+         
+         $rd_valid = $is_r_instr || $is_j_instr || $is_i_instr || $is_u_instr;
+         $rs2_valid = $is_r_instr || $is_s_instr || $is_b_instr;
+         $rs1_valid = $is_r_instr || $is_i_instr || $is_b_instr || $is_s_instr;
+         $funct3_valid = $is_r_instr || $is_i_instr || $is_b_instr || $is_s_instr;
+         $funct7_valid = $is_r_instr;
+         
+         ?$rd_valid
+            $rd[4:0] = $instr[11:7];
+         
+         ?$rs2_valid
+            $rs2[4:0] = $instr[24:20];
+         ?$rs1_valid
+            $rs1[4:0] = $instr[19:15];
+         ?$funct3_valid
+            $funct3[2:0] = $instr[14:12];
+         ?$funct7_valid
+            $funct7[6:0] = $instr[31:25];
+            
+         //decoding instructions
+         
+         $dec_bits[10:0] = {$funct7[5],$funct3,$opcode};
+         //Branch Instructions 
+         //BEQ - Branch on equal 
+         $is_beq = $dec_bits ==? 11'bx_000_1100011;
+         //BNE - Branch on not equal
+         $is_bne = $dec_bits ==? 11'bx_001_1100011;
+         //BLT - Branch on less than
+         $is_blt = $dec_bits ==? 11'bx_100_1100011;
+         //BGE - Branch on greater than
+         $is_bge = $dec_bits ==? 11'bx_101_1100011;
+         //BLTU - Branch on less than equal
+         $is_bltu = $dec_bits ==? 11'bx_110_1100011;
+         //BGEU - Branch on greater than equal
+         $is_bgeu = $dec_bits ==? 11'bx_111_1100011;
+         
+         //ADD Instructions 
+         $is_addi = $dec_bits ==? 11'bx_000_0010011;
+         $is_add  = $dec_bits ==? 11'b0_000_0110011;
+         
+         //Subtract Instructions
+         $is_sltiu  = $dec_bits ==? 11'bx_011_0010011;
+         $is_xori   = $dec_bits ==? 11'bx_100_0010011;
+         $is_ori    = $dec_bits ==? 11'bx_110_0010011;
+         $is_andi   = $dec_bits ==? 11'bx_111_0010011;
+         $is_slli   = $dec_bits ==? 11'b0_001_0010011;
+         $is_srli   = $dec_bits ==? 11'b0_101_0010011;
+         $is_sral   = $dec_bits ==? 11'b1_101_0010011;
+         $is_sub    = $dec_bits ==? 11'b1_000_0110011;
+         $is_sll    = $dec_bits ==? 11'b0_001_0110011;
+         $is_slt    = $dec_bits ==? 11'b0_010_0110011;
+         $is_sltu   = $dec_bits ==? 11'b0_011_0110011;
+         $is_xor    = $dec_bits ==? 11'b0_100_0110011;
+         $is_srl    = $dec_bits ==? 11'b0_101_0110011;
+         $is_sra    = $dec_bits ==? 11'b1_101_0110011;
+         $is_or     = $dec_bits ==? 11'b0_110_0110011;
+         $is_and    = $dec_bits ==? 11'b0_111_0110011;
+         
+         //Miscellaneous Instructions 
+         $is_lui    = $dec_bits ==? 11'bx_xxx_0110111;
+         $is_auipc  = $dec_bits ==? 11'bx_xxx_0010111;
+         $is_jal    = $dec_bits ==? 11'bx_xxx_1101111;
+         $is_jalr   = $dec_bits ==? 11'bx_000_1100111;
+         $is_sb     = $dec_bits ==? 11'bx_000_0100011;
+         $is_sh     = $dec_bits ==? 11'bx_001_0100011;
+         $is_sw     = $dec_bits ==? 11'bx_010_0100011;
+         $is_slti   = $dec_bits ==? 11'bx_010_0010011;
+         
+         
+         //LOAD INSTRUCTION - As in ISA for Risc-V 
+         $is_load   = $dec_bits ==? 11'bx_010_0000011;
+         
+         //assigning read index values into the register file
+         
+      @2
+         
+         
+         $rf_rd_en1 = $rs1_valid;
+         $rf_rd_index1[4:0] = $rs1;
+         
+         $rf_rd_en2 = $rs2_valid;
+         $rf_rd_index2[4:0] = $rs2;
+         
+         //operating on the read values
+         
+         $src1_value[31:0] = (>>1$rf_wr_index == $rf_rd_index1) && >>1$rf_wr_en
+                             ? >>1$result :
+                             $rf_rd_data1;
+          
+         $src2_value[31:0] = (>>1$rf_wr_index == $rf_rd_index2) && >>1$rf_wr_en
+                             ? >>1$result :
+                             $rf_rd_data2;
+         
+         $taken_br = $is_beq ? ($src1_value == $src2_value) :
+                     $is_bne ?($src1_value != $src2_value) :
+                     $is_bltu ? ($src1_value <  $src2_value) :
+                     $is_bgeu ? ($src1_value >= $src2_value) :
+                     $is_blt ? (($src1_value < $src2_value) ^ ($src1_value[31] != $src2_value[31])) :
+                     $is_bgeu ? (($src1_value >= $src2_value) ^ ($src1_value[31] != $src2_value[31])) :
+                            1'b0;
+         
+         
+         $br_target_pc[31:0] = $taken_br? $pc + $imm : 0;
+         
+         
+         
+      @3
+         
+         
+         // scripting the only operations performed in the above programs 
+         $result[31:0] = $is_add ?
+                         $src1_value[31:0] + $src2_value[31:0] :
+                         $is_sub ?
+                         $src1_value[31:0] - $src2_value[31:0] :
+                         $is_and ?
+                         $src1_value[31:0] & $src2_value[31:0] :
+                         $is_or ?
+                         $src1_value[31:0] | $src2_value[31:0] :
+                         $is_xor ?
+                         $src1_value[31:0] ^ $src2_value[31:0] :
+                         $is_addi ? 
+                         $src1_value[31:0] + $imm[31:0] :
+                         $is_andi ?
+                         $src1_value[31:0] & $imm[31:0] :
+                         $is_ori ?
+                         $src1_value[31:0] | $imm[31:0] :
+                         $is_xori ?
+                         $src1_value[31:0] ^ $imm[31:0] :
+                         //LOAD AND STORE COMPUTATION
+                         $is_load ?
+                         $src1_value[31:0] + $imm[31:0] :
+                         $is_s_instr ?
+                         $src1_value[31:0] + $imm[31:0] :
+                         //ALU FOR MISCELLANEOUS OPERATIONS SHIFT OPERATIONS
+                         $is_slli ?
+                         $src1_value[31:0] << $imm[5:0] :
+                         $is_srli ?
+                         $src1_value[31:0] >> $imm[5:0] :
+                         $is_sll ?
+                         $src1_value[31:0] << $src2_value[4:0] :
+                         $is_srl ?
+                         $src1_value[31:0] >> $src2_value[4:0] :
+                         //ALU FOR MISCELLANEOUS OPERATIONS
+                         $is_sltu ? $sltu_rslt :
+                         $is_sltiu ? $sltiu_rslt :
+                         $is_lui ?
+                         {$imm[31:12], 12'b0} :
+                         $is_auipc ?
+                         $pc + $imm :
+                         $is_jal ?
+                         $pc + 32'd4 :
+                         $is_jalr ?
+                         $pc + 32'd4 :
+                         $is_srai ?
+                         { {32{$src1_value[31]}}, $src1_value} >> $imm[4:0] :
+                         $is_slt ?
+                         ($src1_value[31] == $src2_value[31]) ? $sltu_rslt : {31'b0, $src1_value[31]} :
+                         $is_slti ?
+                         ($src1_value[31] == $imm[31]) ? $sltu_rslt : {31'b0, $src1_value[31]} :
+                         $is_sra ?
+                         { {32{$src1_value[31]}}, $src1_value} >> $src2_value[4:0] :
+                         32'bx;
+         
+         $sltu_rslt[31:0]  = $src1_value[31:0] < $src2_value[31:0];
+         $sltiu_rslt[31:0] = $src1_value[31:0] < $imm;
+         
+         //writing the result of alu into the register file
+         $rf_wr_en = ($rd_valid && $rd!=0 && $valid) || >>2$valid_load ;  //writing only when rd is valid and rd is not equal to x0 register
+         $rf_wr_index[4:0] = >>2$valid_load ? >>2$rd : $rd;
+         
+         $rf_wr_data[31:0] = >>2$valid_load ? >>2$ld_data[31:0] : $result;
+         
+         //checking for branch conditions
+         
+         
+         
+         $valid = !((>>1$valid_taken_br) || (>>2$valid_taken_br) || (>>1$valid_load) || (>>2$valid_load) || (>>1$valid_jump) || (>>2$valid_jump));
+         
+         //checking for branch instructions
+         $valid_taken_br = $valid && $taken_br;
+         
+         //checking for load instructions
+         $valid_load = $valid && $is_load;
+         
+         //checking for jump instructions
+         $is_jump = $is_jal || $is_jalr;
+         $valid_jump = $valid && $is_jump;
+         
+         $jalr_tgt_pc = $src1_value + $imm;
+         
+      @4
+         //Data memory interface
+         $dmem_rd_en = $is_load;
+         $dmem_wr_en = $is_s_instr && $valid;
+         
+         $dmem_addr[3:0] = $result[5:2];
+         $dmem_wr_data[31:0] = $src2_value;
+           
+      @5
+         $ld_data[31:0] = $dmem_rd_data;
+         
+         *passed = |cpu/xreg[15]>>5$value == 45;
+         
+      // Note: Because of the magic we are using for visualisation, if visualisation is enabled below,
+      //       be sure to avoid having unassigned signals (which you might be using for random inputs)
+      //       other than those specifically expected in the labs. You'll get strange errors for these.
 
-// Initialize x12 (a2) with the value 10.
-m4_asm(ADDI, x12, x10, 1010)        
+   
+   // Assert these to end simulation (before Makerchip cycle limit).
+   
+   *failed = 1'b0;
+   
+   // Macro instantiations for:
+   //  o instruction memory
+   //  o register file
+   //  o data memory
+   //  o CPU visualization
+   |cpu
+      m4+imem(@1)    // Args: (read stage)
+      m4+rf(@2, @3)  // Args: (read stage, write stage) - if equal, no register bypass is required
+      m4+dmem(@4)    // Args: (read/write stage)
 
-// Set x13 (a3) to 0 as the starting value.
-m4_asm(ADD, x13, x10, x0)           
-
-// Loop: Add x13 (a3) to x14 (a4).
-m4_asm(ADD, x14, x13, x14)           
-
-// Increment x13 (a3) by 1 for the next iteration.
-m4_asm(ADDI, x13, x13, 1)            
-
-// Continue looping until x13 (a3) reaches x12 (a2).
-m4_asm(BLT, x13, x12, 1111111111000) 
-
-// Store the result in x10 (a0).
-m4_asm(ADD, x10, x14, x0)            
-
-// Validate Load and Store instructions.
-m4_asm(SW, x0, x10, 100)             
-m4_asm(LW, x15, x0, 100)             
-
-// Optional infinite loop (uncomment to use).
-// m4_asm(JAL, x7, 00000000000000000000) 
-
-m4_define_hier(['M4_IMEM'], M4_NUM_INSTRS)
-
-// CPU Implementation
-|cpu
-   @0
-      $reset = *reset;
-      $clk_zunaid = *clk;
-
-   // Program Counter Logic
-   @0
-      $pc[31:0] = >>1$reset ? 0 
-                 : >>3$branch_taken ? >>3$branch_target
-                 : >>3$valid_mem_load ? >>3$next_pc
-                 : >>3$jump_valid && >>3$is_jal ? >>3$branch_target
-                 : >>3$jump_valid && >>3$is_jalr ? >>3$jalr_target
-                 : >>1$next_pc;
-      
-      $start_signal = !$reset && >>1$reset;
-
-   // Fetch and Decode Logic
-   @1
-      $next_pc[31:0] = $pc + 32'd4;
-      $imem_rd_addr[M4_IMEM_INDEX_CNT-1:0] = $pc[M4_IMEM_INDEX_CNT+1:2];
-      $imem_rd_en = !$reset;
-      $instr_word[31:0] = $imem_rd_data[31:0];
-
-      // Decode instruction types
-      $i_type = $instr_word[6:2] ==? 5'b0000x || $instr_word[6:2] ==? 5'b001x0 || $instr_word[6:2] ==? 5'b11100;
-      $r_type = $instr_word[6:2] ==? 5'b01011 || $instr_word[6:2] ==? 5'b01100 || $instr_word[6:2] ==? 5'b01110 || $instr_word[6:2] ==? 5'b10100;
-      $b_type = $instr_word[6:2] ==? 5'b11000;
-      $s_type = $instr_word[6:2] ==? 5'b0100x;
-      $j_type = $instr_word[6:2] ==? 5'b11011;
-      $u_type = $instr_word[6:2] ==? 5'b0x101;
-
-      // Immediate value decoding
-      $imm_value[31:0] = $i_type ? {{21{$instr_word[31]}}, $instr_word[30:20]} :
-                         $s_type ? {{21{$instr_word[31]}}, $instr_word[30:25], $instr_word[11:7]} :
-                         $b_type ? {{20{$instr_word[31]}}, $instr_word[7], $instr_word[30:25], $instr_word[11:8], 1'b0} :
-                         $u_type ? {$instr_word[31:12], 12'b0} :
-                         $j_type ? {{12{$instr_word[31]}}, $instr_word[19:12], $instr_word[20], $instr_word[30:21], 1'b0} :
-                         32'b0;
-
-      // Decode instruction components
-      $opcode_val[6:0] = $instr_word[6:0];
-      $rd_valid = $r_type || $j_type || $i_type || $u_type;
-      $rs2_valid = $r_type || $s_type || $b_type;
-      $rs1_valid = $r_type || $i_type || $b_type || $s_type;
-      $funct3_valid = $r_type || $i_type || $b_type || $s_type;
-      $funct7_valid = $r_type;
-
-      // Assign register fields
-      ?$rd_valid $rd[4:0] = $instr_word[11:7];
-      ?$rs2_valid $rs2[4:0] = $instr_word[24:20];
-      ?$rs1_valid $rs1[4:0] = $instr_word[19:15];
-      ?$funct3_valid $funct3[2:0] = $instr_word[14:12];
-      ?$funct7_valid $funct7[6:0] = $instr_word[31:25];
-
-      // Instruction Decoding
-      $instr_dec[10:0] = {$funct7[5], $funct3, $opcode_val};
-      $is_beq = $instr_dec ==? 11'bx_000_1100011;
-      $is_bne = $instr_dec ==? 11'bx_001_1100011;
-      $is_blt = $instr_dec ==? 11'bx_100_1100011;
-      $is_bge = $instr_dec ==? 11'bx_101_1100011;
-      $is_bltu = $instr_dec ==? 11'bx_110_1100011;
-      $is_bgeu = $instr_dec ==? 11'bx_111_1100011;
-
-      $is_addi = $instr_dec ==? 11'bx_000_0010011;
-      $is_add  = $instr_dec ==? 11'b0_000_0110011;
-      $is_sub  = $instr_dec ==? 11'b1_000_0110011;
-
-      $is_sltiu = $instr_dec ==? 11'bx_011_0010011;
-      $is_xori = $instr_dec ==? 11'bx_100_0010011;
-      $is_ori = $instr_dec ==? 11'bx_110_0010011;
-      $is_andi = $instr_dec ==? 11'bx_111_0010011;
-      $is_slli = $instr_dec ==? 11'b0_001_0010011;
-      $is_srli = $instr_dec ==? 11'b0_101_0010011;
-      $is_sral = $instr_dec ==? 11'b1_101_0010011;
-      $is_sll = $instr_dec ==? 11'b0_001_0110011;
-      $is_slt = $instr_dec ==? 11'b0_010_0110011;
-      $is_sltu = $instr_dec ==? 11'b0_011_0110011;
-      $is_xor = $instr_dec ==? 11'b0_100_0110011;
-      $is_srl = $instr_dec ==? 11'b0_101_0110011;
-      $is_sra = $instr_dec ==? 11'b1_101_0110011;
-      $is_or = $instr_dec ==? 11'b0_110_0110011;
-      $is_and = $instr_dec ==? 11'b0_111_0110011;
-
-      $is_lui = $instr_dec ==? 11'bx_xxx_0110111;
-      $is_auipc = $instr_dec ==? 11'bx_xxx_0010111;
-      $is_jal = $instr_dec ==? 11'bx_xxx_1101111;
-      $is_jalr = $instr_dec ==? 11'bx_000_1100111;
-      $is_sb = $instr_dec ==? 11'bx_000_0100011;
-      $is_sh = $instr_dec ==? 11'bx_001_0100011;
-      $is_sw = $instr_dec ==? 11'bx_010_0100011;
-      $is_lb = $instr_dec ==? 11'bx_000_0000011;
-      $is_lh = $instr_dec ==? 11'bx_001_0000011;
-      $is_lw = $instr_dec ==? 11'bx_010_0000011;
-      $is_lbu = $instr_dec ==? 11'bx_100_0000011;
-      $is_lhu = $instr_dec ==? 11'bx_101_0000011;
-
-      $is_fence = $instr_dec ==? 11'bx_xxx_0001111;
-      $is_ecall = $instr_dec ==? 11'bx_000_1110011;
-      $is_ebreak = $instr_dec ==? 11'bx_001_1110011;
-      $is_mret = $instr_dec ==? 11'bx_000_1110011;
-      $is_csrrw = $instr_dec ==? 11'bx_001_1110011;
-      $is_csrrs = $instr_dec ==? 11'bx_010_1110011;
-      $is_csrrc = $instr_dec ==? 11'bx_011_1110011;
-      $is_csrrwi = $instr_dec ==? 11'bx_101_1110011;
-      $is_csrrsi = $instr_dec ==? 11'bx_110_1110011;
-      $is_csrrci = $instr_dec ==? 11'bx_111_1110011;
-
-      $branch_taken = $is_beq && $rs1_value ==? $rs2_value || $is_bne && $rs1_value !=? $rs2_value || $is_blt && $rs1_value <_signed $rs2_value || $is_bge && $rs1_value >=_signed $rs2_value || $is_bltu && $rs1_value < $rs2_value || $is_bgeu && $rs1_value >= $rs2_value;
-
-      $branch_target = $pc + $imm_value;
-
-   // Execute Logic
-   @3
-      $valid_mem_load = $is_lb || $is_lh || $is_lw || $is_lbu || $is_lhu;
-      $valid_mem_store = $is_sb || $is_sh || $is_sw;
-      $jump_valid = $is_jal || $is_jalr;
-      $mem_addr = $rs1_value + $imm_value;
-      $branch_valid = $branch_taken || $is_jal || $is_jalr;
-
-      // ALU Operations
-      $alu_result[31:0] = $is_lui || $is_auipc ? $imm_value :
-                          $is_jal || $is_jalr ? $next_pc :
-                          $is_addi || $is_lb || $is_lh || $is_lw || $is_lbu || $is_lhu || $is_sb || $is_sh || $is_sw ? $rs1_value + $imm_value :
-                          $is_sltiu ? $rs1_value < $imm_value :
-                          $is_xori ? $rs1_value ^ $imm_value :
-                          $is_ori ? $rs1_value | $imm_value :
-                          $is_andi ? $rs1_value & $imm_value :
-                          $is_slli ? $rs1_value << $imm_value[4:0] :
-                          $is_srli ? $rs1_value >> $imm_value[4:0] :
-                          $is_sral ? $rs1_value >>> $imm_value[4:0] :
-                          $is_add ? $rs1_value + $rs2_value :
-                          $is_sub ? $rs1_value - $rs2_value :
-                          $is_sll ? $rs1_value << $rs2_value[4:0] :
-                          $is_slt ? $rs1_value <_signed $rs2_value :
-                          $is_sltu ? $rs1_value < $rs2_value :
-                          $is_xor ? $rs1_value ^ $rs2_value :
-                          $is_srl ? $rs1_value >> $rs2_value[4:0] :
-                          $is_sra ? $rs1_value >>> $rs2_value[4:0] :
-                          $is_or ? $rs1_value | $rs2_value :
-                          $is_and ? $rs1_value & $rs2_value :
-                          32'b0;
-
-      // Memory Operations
-      $mem_wr_data[7:0] = $is_sb ? $rs2_value[7:0] : $is_sh ? $rs2_value[15:0] : $is_sw ? $rs2_value[31:0] : 8'b0;
-      $mem_rd_en = $valid_mem_load;
-      $mem_wr_en = $valid_mem_store;
-      $branch_taken = $branch_valid;
-      $branch_target = $branch_valid ? $pc + $imm_value : 32'b0;
-
-   // Writeback Logic
-   @4
-      // Register Writeback
-      $rd_wr_en = $rd_valid;
-      $rd_wr_data[31:0] = $valid_mem_load ? $mem_rd_data[31:0] : $alu_result[31:0];
-      $rd_wr_addr[4:0] = $rd[4:0];
-      ?$rd_valid $reg_file[$rd[4:0]] <= $rd_wr_data[31:0];
+   m4+cpu_viz(@4)    // For visualisation, argument should be at least equal to the last stage of CPU logic. @4 would work for all labs.
+\SV
+   endmodule
 
 
 ```
