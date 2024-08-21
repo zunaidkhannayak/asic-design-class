@@ -478,17 +478,25 @@ the waveform generated:
 
 ### The final code:
 ```c
+
 \m4_TLV_version 1d: tl-x.org
 \SV
- m4_include_lib(['https://raw.githubusercontent.com/BalaDhinesh/RISC-V_MYTH_Workshop/master/tlv_lib/risc-v_shell_lib.tlv'])
+   // This code can be found in: https://github.com/stevehoover/RISC-V_MYTH_Workshop
+   
+   m4_include_lib(['https://raw.githubusercontent.com/BalaDhinesh/RISC-V_MYTH_Workshop/master/tlv_lib/risc-v_shell_lib.tlv'])
 
-\SV m4_makerchip_module
+\SV
+   m4_makerchip_module   // (Expanded in Nav-TLV pane.)
 \TLV
-// ------------- Sum from 1 to 9 ------------
-// This program sums the numbers 1 through 9 
-// for the MYTH Workshop to validate RV32I.
-// The steps involve adding 1, 2, 3,...,9.
-   // Registers:
+
+   // /====================\
+   // | Sum 1 to 9 Program |
+   // \====================/
+   //
+   // Program for MYTH Workshop to test RV32I
+   // Add 1,2,3,...,9 (in that order).
+   //
+   // Regs:
    //  r10 (a0): In: 0, Out: final sum
    //  r12 (a2): 10
    //  r13 (a3): 1..10
@@ -519,6 +527,9 @@ the waveform generated:
          $reset = *reset;
          $clk_zunaid = *clk;
 
+
+
+      // YOUR CODE HERE
       @0
          $pc[31:0] = >>1$reset ? 0 
                     : >>3$valid_taken_br ? >>3$br_target_pc
@@ -532,12 +543,13 @@ the waveform generated:
          
       @1
          $pc_inc[31:0] = $pc + 32'd4;
+         //Fetch logic
          
          $imem_rd_addr[M4_IMEM_INDEX_CNT -1 : 0] = $pc[M4_IMEM_INDEX_CNT +1 : 2];
          $imem_rd_en = !$reset;
          $instr[31:0] = $imem_rd_data[31:0];
          
-  
+         // Instruction type identify
          $is_i_instr = $instr[6:2] ==? 5'b0000x ||
                        $instr[6:2] ==? 5'b001x0 ||
                        $instr[6:2] ==? 5'b11100 ;
@@ -554,7 +566,7 @@ the waveform generated:
          
          $is_u_instr = $instr[6:2] ==? 5'b0x101;
          
-        
+         //decode logic for immediate values
          
          $imm[31:0] = $is_i_instr ? { {21{$instr[31]}}, $instr[30:20]}:
                       $is_s_instr ? { {21{$instr[31]}}, $instr[30:25], $instr[11:7]} :
@@ -563,7 +575,8 @@ the waveform generated:
                       $is_j_instr ? { {12{$instr[31]}}, $instr[19:12], $instr[20], $instr[30:21], 1'b0} :
                       32'b0;         
                 
-        
+         //decoding other instruction elements
+         
          $opcode[6:0] = $instr[6:0] ;
          
          $rd_valid = $is_r_instr || $is_j_instr || $is_i_instr || $is_u_instr;
@@ -765,9 +778,10 @@ the waveform generated:
            
       @5
          $ld_data[31:0] = $dmem_rd_data;
+        
          
          *passed = |cpu/xreg[15]>>5$value == 45;
-         
+        
       // Note: Because of the magic we are using for visualisation, if visualisation is enabled below,
       //       be sure to avoid having unassigned signals (which you might be using for random inputs)
       //       other than those specifically expected in the labs. You'll get strange errors for these.
@@ -790,8 +804,6 @@ the waveform generated:
    m4+cpu_viz(@4)    // For visualisation, argument should be at least equal to the last stage of CPU logic. @4 would work for all labs.
 \SV
    endmodule
-
-
 ```
 ### The waveform for the /xreg[14] where the sum of this program is store:
 ![Screenshot (103)](https://github.com/user-attachments/assets/4809a79c-eb21-46f4-b02f-596242c3cdba)
