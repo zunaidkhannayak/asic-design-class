@@ -809,3 +809,39 @@ Verifies if the result of the computation matches the expected outcome (sum of n
 ![Screenshot (103)](https://github.com/user-attachments/assets/4809a79c-eb21-46f4-b02f-596242c3cdba)
 ### summary:
 This code sets up a simulation for a RISC-V processor with a specific program that computes the sum of integers from 1 to 9. The assembly code initializes the registers, performs a looped addition, and stores the final result. The simulation logic models how the processor would fetch, decode, and execute instructions while handling memory operations and validating the result.
+
+<details>
+
+ <details>
+ 
+<summary> <h2>Lab6</h2> </summary>
+
+### lab6: To convert the TLV to verilog using Sandpiper.
+#### Purpose of modelling :
+System models are specifically developed to support analysis, specification, design, verification and validation of a system, as well as to communicate certain information
+#### What are we modelling? (VSDBabySoC)
+Some initial input signals will be fed into vsdbabysoc module.
+PLL will start generating the proper CLK for the circuit.
+Clock signal CLK will make the rvmyth to execute instructions and some values are generated, these values are used by DAC core to provide the final output signal named OUT
+There are 3 main elements (IP cores) and a wrapper as SoC and also a testbench module.
+
+RVMYTH is designed and created by the TL-Verilog language. So we need a way for compile and transform it to the Verilog language and use the result in our SoC. Here the sandpiper-saas could help us do the job.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<details>
+
