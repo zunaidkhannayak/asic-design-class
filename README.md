@@ -868,3 +868,5 @@ reset: This is the input reset signal to the RISC-V core.
 `OUT[9:0]:` This is the 10-bit output [9:0] OUT port of the RISC-V core. 
 This port comes from the RISC-V register #14.
 we can see the output waveform through GTKwave output 002D which is final output of our program. 
+![Screenshot (120)](https://github.com/user-attachments/assets/ecf204c5-1020-4da9-b595-8dc9f7cb2b32)
+
