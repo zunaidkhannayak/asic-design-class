@@ -810,7 +810,7 @@ Verifies if the result of the computation matches the expected outcome (sum of n
 ### summary:
 This code sets up a simulation for a RISC-V processor with a specific program that computes the sum of integers from 1 to 9. The assembly code initializes the registers, performs a looped addition, and stores the final result. The simulation logic models how the processor would fetch, decode, and execute instructions while handling memory operations and validating the result.
 
-<details>
+</details>
 
  <details>
  
@@ -843,5 +843,5 @@ RVMYTH is designed and created by the TL-Verilog language. So we need a way for 
 
 
 
-<details>
+</details>
 
