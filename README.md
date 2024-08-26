@@ -870,3 +870,4 @@ This port comes from the RISC-V register #14.
 we can see the output waveform through GTKwave output 002D which is final output of our program. 
 ![Screenshot (120)](https://github.com/user-attachments/assets/ecf204c5-1020-4da9-b595-8dc9f7cb2b32)
 
+![Screenshot (126)](https://github.com/user-attachments/assets/3ac49bc3-dae3-4e41-89dd-2de7c5e6d41e)
