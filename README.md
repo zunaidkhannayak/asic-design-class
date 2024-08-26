@@ -845,19 +845,19 @@ RVMYTH is designed and created by the TL-Verilog language. So we need a way for 
 Replace the rvmyth.tlv file in the VSDBabySoC Directory: replace in src/module with the rvmth.tlv.
 ![Screenshot (113)](https://github.com/user-attachments/assets/5a869dfa-c56c-47dc-bc6b-f82c8a4da9ce)
 
-Convert .tlv to .v using converter:
+#### Convert .tlv to .v using converter:
 `sandpiper-saas -i ./src/module/*.tlv -o rvmyth.v --bestsv --noline -p verilog --outdir ./src/module/`
 Make the pre_synth_sim.vcd: We will create the pre_synth_sim.vcd by running the following command
 ![Screenshot (115)](https://github.com/user-attachments/assets/3d7b2473-d185-481b-b929-7c7c714749ec)
 
 `make pre_synth_sim`
-Now to compile and simulate RISC-V design run the following code: To compile and simulate vsdbabysoc design.
+#### Now to compile and simulate RISC-V design run the following code: To compile and simulate vsdbabysoc design.
 `iverilog -o output/pre_synth_sim.out -DPRE_SYNTH_SIM src/module/testbench.v -I src/include -I src/module`
 `cd output`
-`./pre_synth_sim.out`To generate pre_synth_sim.vcd file,which is our simulation waveform file.
+`./pre_synth_sim.out` To generate pre_synth_sim.vcd file,which is our simulation waveform file.
 `gtkwave pre_synth_sim.out `- to open simulation waveform in gtkwave tool
- The following diagram contains:-
-clk_zunaid: This is the clock input to the RISC-V core.
+ #### The following diagram contains:-
+`clk_zunaid`: This is the clock input to the RISC-V core.
 
 reset: This is the input reset signal to the RISC-V core.
 ![Screenshot (117)](https://github.com/user-attachments/assets/89b4a573-3062-49a2-a5d6-25171e91bbf1)
@@ -865,4 +865,6 @@ reset: This is the input reset signal to the RISC-V core.
 
 
 
-OUT[9:0]: This is the 10-bit output [9:0] OUT port of the RISC-V core. This port comes from the RISC-V register #14, originally.
+`OUT[9:0]:` This is the 10-bit output [9:0] OUT port of the RISC-V core. 
+This port comes from the RISC-V register #14.
+we can see the output waveform through GTKwave output 002D which is final output of our program. 
