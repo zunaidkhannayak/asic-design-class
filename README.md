@@ -842,7 +842,7 @@ RVMYTH is designed and created by the TL-Verilog language. So we need a way for 
 2. ` git clone https://github.com/manili/VSDBabySoC.git ` - clone this repo containing VSDBabySoC design files and testbench.
 
 3. `cd /home/subhasis/VSDBabySoC`
-Replace the rvmyth.tlv file in the VSDBabySoC Directory: replace in src/module with the rvmth.tlv.
+Replace the `rvmyth.tlv` file in the VSDBabySoC Directory: replace in `src/module with the rvmth.tlv`.
 ![Screenshot (113)](https://github.com/user-attachments/assets/5a869dfa-c56c-47dc-bc6b-f82c8a4da9ce)
 
 #### Convert .tlv to .v using converter:
@@ -868,7 +868,8 @@ reset: This is the input reset signal to the RISC-V core.
 `OUT[9:0]:` This is the 10-bit output [9:0] OUT port of the RISC-V core. 
 This port comes from the RISC-V register #14.
 we can see the output waveform through GTKwave output 002D which is final output of our program. 
-![Screenshot (120)](https://github.com/user-attachments/assets/ecf204c5-1020-4da9-b595-8dc9f7cb2b32)
+![Screenshot (133)](https://github.com/user-attachments/assets/fc1580c2-b4ad-490e-bf93-a3bf733f5792)
+
 
 ![Screenshot (132)](https://github.com/user-attachments/assets/53a3b755-f02d-4017-859b-67ea36e7a1b6)
 
