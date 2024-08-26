@@ -816,32 +816,53 @@ This code sets up a simulation for a RISC-V processor with a specific program th
  
 <summary> <h2>Lab6</h2> </summary>
 
-### lab6: To convert the TLV to verilog using Sandpiper.
+### lab6: To convert the TLV to verilog using Sandpiper and then use GTKWave  pre-synthesis simulation to verify the design.
 #### Purpose of modelling :
 System models are specifically developed to support analysis, specification, design, verification and validation of a system, as well as to communicate certain information
 #### What are we modelling? (VSDBabySoC)
-Some initial input signals will be fed into vsdbabysoc module.
-PLL will start generating the proper CLK for the circuit.
-Clock signal CLK will make the rvmyth to execute instructions and some values are generated, these values are used by DAC core to provide the final output signal named OUT
+1> Some initial input signals will be fed into vsdbabysoc module.
+2> PLL will start generating the proper CLK for the circuit.
+3> Clock signal CLK will make the rvmyth to execute instructions and some values are generated, these values are used by DAC core to provide the final output signal named OUT
 There are 3 main elements (IP cores) and a wrapper as SoC and also a testbench module.
 
 RVMYTH is designed and created by the TL-Verilog language. So we need a way for compile and transform it to the Verilog language and use the result in our SoC. Here the sandpiper-saas could help us do the job.
+#### procedure :
+
+1. Install These Required Packages:
+   
+  ```c
+   
+ $ sudo apt install make python python3 python3-pip git iverilog gtkwave docker.io
+ $ sudo chmod 666 /var/run/docker.sock
+ $ cd ~
+ $ pip3 install pyyaml click sandpiper-saas
+ 
+ ```
+
+2. ` git clone https://github.com/manili/VSDBabySoC.git ` - clone this repo containing VSDBabySoC design files and testbench.
+
+3. `cd /home/subhasis/VSDBabySoC`
+Replace the rvmyth.tlv file in the VSDBabySoC Directory: replace in src/module with the rvmth.tlv.
+![Screenshot (113)](https://github.com/user-attachments/assets/5a869dfa-c56c-47dc-bc6b-f82c8a4da9ce)
+
+Convert .tlv to .v using converter:
+`sandpiper-saas -i ./src/module/*.tlv -o rvmyth.v --bestsv --noline -p verilog --outdir ./src/module/`
+Make the pre_synth_sim.vcd: We will create the pre_synth_sim.vcd by running the following command
+![Screenshot (115)](https://github.com/user-attachments/assets/3d7b2473-d185-481b-b929-7c7c714749ec)
+
+`make pre_synth_sim`
+Now to compile and simulate RISC-V design run the following code: To compile and simulate vsdbabysoc design.
+`iverilog -o output/pre_synth_sim.out -DPRE_SYNTH_SIM src/module/testbench.v -I src/include -I src/module`
+`cd output`
+`./pre_synth_sim.out`To generate pre_synth_sim.vcd file,which is our simulation waveform file.
+`gtkwave pre_synth_sim.out `- to open simulation waveform in gtkwave tool
+ The following diagram contains:-
+clk_zunaid: This is the clock input to the RISC-V core.
+
+reset: This is the input reset signal to the RISC-V core.
+![Screenshot (117)](https://github.com/user-attachments/assets/89b4a573-3062-49a2-a5d6-25171e91bbf1)
+![Screenshot (120)](https://github.com/user-attachments/assets/333f1527-ceed-47f0-8117-6c91d222e092)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</details>
-
+OUT[9:0]: This is the 10-bit output [9:0] OUT port of the RISC-V core. This port comes from the RISC-V register #14, originally.
