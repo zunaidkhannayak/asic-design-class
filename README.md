@@ -873,3 +873,67 @@ we can see the output waveform through GTKwave output 002D which is final output
 
 ![Screenshot (132)](https://github.com/user-attachments/assets/53a3b755-f02d-4017-859b-67ea36e7a1b6)
 
+</details>
+
+<details>
+<summary> <h2>Lab7</h2> </summary>
+ 
+### To convert a digital output from a .v (Verilog) file into an analog signal using a DAC (Digital-to-Analog Converter) and PLL (Phase-Locked Loop)
+ - PLL (Phase-Locked Loop):  A PLL is used to generate stable clock signals from a reference clock. It can also be used to adjust the frequency of the system clock to meet the requirements of the DAC or other peripherals.
+ - DAC (Digital-to-Analog Converter): A DAC converts digital signals into an analog voltage. It requires a clock signal to control the conversion rate.
+   ### step by step process:
+   firstly we need to intall and check follwing tools using these commands
+   - **yosys**
+   ```c
+   $ sudo apt-get update
+$ git clone https://github.com/YosysHQ/yosys.git
+$ cd yosys
+$ sudo apt install make (If make is not installed please install it) 
+$ sudo apt-get install build-essential clang bison flex \
+    libreadline-dev gawk tcl-dev libffi-dev git \
+    graphviz xdot pkg-config python3 libboost-system-dev \
+    libboost-python-dev libboost-filesystem-dev zlib1g-dev
+$ make config-gcc
+$ make 
+$ sudo make install
+```
+- **iverilog** 
+
+```c
+sudo apt-get update
+sudo apt-get install iverilog
+```
+- **gtkwave**
+ ```c
+  sudo apt-get update
+sudo apt install gtkwave
+```
+#### for getting the files Babysoc_simulation 
+
+`git clone https://github.com/Subhasis-Sahu/BabySoC_Simulation/`
+
+```c
+sudo apt install make python python3 python3-pip git iverilog gtkwave
+
+cd ~
+
+sudo apt-get install python3-venv
+
+python3 -m venv .venv
+
+source ~/.venv/bin/activate
+
+pip3 install pyyaml click sandpiper-saas
+```
+#### To perform Functional Simulation :
+```c
+cd BabySoC_Simulation
+iverilog -o ./pre_synth_sim.out -DPRE_SYNTH_SIM src/module/testbench.v -I src/include -I src/module/
+./pre_synth_sim.out
+gtkwave pre_synth_sim.vcd
+```
+
+after simulation through gtkwave we obtained following results:
+![Screenshot from 2024-08-31 18-28-04](https://github.com/user-attachments/assets/ba3f6252-0080-42cb-ae2b-2b2cc9e5e1f1)
+![Screenshot from 2024-08-31 18-28-13](https://github.com/user-attachments/assets/eeac6282-6914-47b3-97f7-71883291e571)
+
