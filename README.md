@@ -934,6 +934,12 @@ gtkwave pre_synth_sim.vcd
 ```
 
 after simulation through gtkwave we obtained following results:
+we can clearly observe that the out waveform is from the output of dac which is providing analog output and ou clk Zunaid can be clearly seen here:
 ![Screenshot from 2024-08-31 18-28-04](https://github.com/user-attachments/assets/ba3f6252-0080-42cb-ae2b-2b2cc9e5e1f1)
 ![Screenshot from 2024-08-31 18-28-13](https://github.com/user-attachments/assets/eeac6282-6914-47b3-97f7-71883291e571)
+![Screenshot from 2024-08-31 18-34-23](https://github.com/user-attachments/assets/33e7e4c3-a63c-4966-b660-2059100816cf)
+command line screenshots
+![Screenshot from 2024-08-31 18-35-27](https://github.com/user-attachments/assets/df892c38-ad46-4f97-9f0f-d5f615ba16e0)
+![Screenshot from 2024-08-31 18-35-39](https://github.com/user-attachments/assets/aab5e60e-201e-41ef-a41f-0a7136392e56)
+
 
